@@ -35,31 +35,31 @@ export default function FilterBar({
             </button>
           ))}
         </div>
+        <button
+          className={`favourites-toggle ${showOnlyFavourites ? "active" : ""}`}
+          onClick={() => onToggleFavouritesFilter(!showOnlyFavourites)}
+          aria-label="Show favourites only"
+        >
+          ❤️
+        </button>
       </div>
 
       <div className="filter-section controls-section">
         <div className="controls">
           <div className="sort-buttons">
-            {["name", "hp", "attack"].map((option) => (
+            {["name", "type", "hp", "attack"].map((option) => (
               <button
                 key={option}
                 className={`sort-btn ${sortBy === option ? "active" : ""}`}
                 onClick={() => onSortChange(option)}
               >
                 {option === "name" && "Name"}
+                {option === "type" && "Type"}
                 {option === "hp" && "HP"}
                 {option === "attack" && "Attack"}
               </button>
             ))}
           </div>
-
-          <button
-            className={`favourites-toggle ${showOnlyFavourites ? "active" : ""}`}
-            onClick={() => onToggleFavouritesFilter(!showOnlyFavourites)}
-            aria-label="Show favourites only"
-          >
-            ❤️
-          </button>
         </div>
       </div>
     </div>

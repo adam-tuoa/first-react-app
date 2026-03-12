@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { pokemons } from "./data/pokemons";
 import PokemonCard from "./components/PokemonCard";
 import FilterBar from "./components/FilterBar";
+import Footer from "./components/Footer";
 import "./App.css";
 
 function App() {
@@ -32,6 +33,8 @@ function App() {
     result = [...result].sort((a, b) => {
       if (sortBy === "name") {
         return a.name.localeCompare(b.name);
+      } else if (sortBy === "type") {
+        return a.type.localeCompare(b.type);
       } else if (sortBy === "hp") {
         return b.hp - a.hp;
       } else if (sortBy === "attack") {
@@ -58,7 +61,7 @@ function App() {
     <div className="app-container">
       <header className="app-header">
         <h1>Pokémon Explorer</h1>
-        <p className="subtitle">Click cards to flip, heart to favourite, filters above</p>
+        <p className="subtitle">Celebrating 30 years</p>
       </header>
 
       <FilterBar
@@ -85,6 +88,25 @@ function App() {
           <div className="no-results">No Pokémon found</div>
         )}
       </div>
+
+      <Footer
+        attribution={{
+          text: "Yan Holtz's D3-loves-react course",
+          href: "http://d3-loves-react.com",
+        }}
+        links={[
+          {
+            href: "https://adam-tuoa.github.io/homepage/",
+            label: "Homepage",
+            icon: "home",
+          },
+          {
+            href: "https://github.com/adam-tuoa",
+            label: "GitHub",
+            icon: "github",
+          },
+        ]}
+      />
     </div>
   );
 }

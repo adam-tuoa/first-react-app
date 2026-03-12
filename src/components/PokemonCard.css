@@ -15,13 +15,36 @@
   font-size: 24px;
   cursor: pointer;
   padding: 4px;
-  transition: transform 0.2s ease;
   border-radius: 4px;
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+  transition: transform 0.6s ease;
+}
+
+.favourite-btn.flipped {
+  transform: rotateY(180deg);
+}
+
+.favourite-btn.animating {
+  animation: none !important;
+}
+
+.card-container:hover .favourite-btn:not(.animating) {
+  animation: jiggleScale 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 1;
 }
 
 .favourite-btn:hover {
-  transform: scale(1.2);
-  background: rgba(0, 0, 0, 0.05);
+  transform: scale(1.25);
+  /* add square background */
+  /* background: rgba(0, 0, 0, 0.05); */
+}
+
+.favourite-btn.active {
+  /* add dropshadow on select
+  filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.8))
+    drop-shadow(0 0 4px rgba(255, 105, 180, 0.6));
+  */
+  transform: scale(1.15);
 }
 
 /* 3D flip effect */
@@ -29,7 +52,7 @@
   position: relative;
   width: 100%;
   height: 100%;
-  cursor: pointer;
+  cursor: grab;
   perspective: 1000px;
   transition: transform 0.6s;
   transform-style: preserve-3d;
@@ -37,6 +60,36 @@
 
 .flip-card.flipped {
   transform: rotateY(180deg);
+  animation: none !important;
+}
+
+.flip-card.animating {
+  animation: none !important;
+  transform: rotateY(0deg) !important;
+}
+
+.flip-card.animating.flipped {
+  transform: rotateY(180deg) !important;
+}
+
+@keyframes jiggleScale {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.02) rotate(-1deg);
+  }
+  50% {
+    transform: scale(1.02) rotate(1deg);
+  }
+  75% {
+    transform: scale(1.02) rotate(1deg);
+  }
+}
+
+.card-container:hover .flip-card:not(.flipped):not(.animating) {
+  animation: jiggleScale 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 1;
 }
 
 .flip-card-front,
@@ -58,6 +111,8 @@
 .flip-card-front {
   background: white;
   border: 1px solid #e0e0e0;
+  border-left: 4px solid var(--type-color);
+  border-top: 4px solid var(--type-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -82,6 +137,25 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   gap: 16px;
   padding: 20px 16px;
+  border-left: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.flip-card-back::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
 }
 
 .type-badge {

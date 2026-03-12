@@ -2,11 +2,23 @@ import { useState } from "react";
 import { typeColors } from "../data/typeColors";
 import "./PokemonCard.css";
 
-export default function PokemonCard({ pokemon, isFavourite, onToggleFavourite }) {
+export default function PokemonCard({
+  pokemon,
+  isFavourite,
+  onToggleFavourite,
+}) {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const handleFlip = () => {
+    setIsAnimating(true);
     setIsFlipped(!isFlipped);
+    setTimeout(() => setIsAnimating(false), 600);
+  };
+
+  const handleCardClick = (e) => {
+    if (e.target.closest(".favourite-btn")) return;
+    handleFlip();
   };
 
   const accentColor = typeColors[pokemon.type];
@@ -15,7 +27,7 @@ export default function PokemonCard({ pokemon, isFavourite, onToggleFavourite })
     <div className="card-container">
       {/* Heart icon for favourites */}
       <button
-        className="favourite-btn"
+        className={`favourite-btn ${isFavourite ? "active" : ""} ${isFlipped ? "flipped" : ""} ${isAnimating ? "animating" : ""}`}
         onClick={() => onToggleFavourite(pokemon.id)}
         aria-label="Toggle favourite"
       >
@@ -24,8 +36,9 @@ export default function PokemonCard({ pokemon, isFavourite, onToggleFavourite })
 
       {/* Flippable card */}
       <div
-        className={`flip-card ${isFlipped ? "flipped" : ""}`}
-        onClick={handleFlip}
+        className={`flip-card ${isFlipped ? "flipped" : ""} ${isAnimating ? "animating" : ""}`}
+        onClick={handleCardClick}
+        style={{ "--type-color": accentColor }}
       >
         {/* Front of card */}
         <div className="flip-card-front">
@@ -38,7 +51,10 @@ export default function PokemonCard({ pokemon, isFavourite, onToggleFavourite })
         </div>
 
         {/* Back of card */}
-        <div className="flip-card-back" style={{ backgroundColor: accentColor }}>
+        <div
+          className="flip-card-back"
+          style={{ backgroundColor: accentColor }}
+        >
           <div className="type-badge">{pokemon.type}</div>
           <div className="stats-group">
             <div className="stat">
