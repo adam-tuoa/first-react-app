@@ -1,40 +1,91 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { useState, useMemo } from "react";
+import { pokemons } from "./data/pokemons";
+import PokemonCard from "./components/PokemonCard";
+import FilterBar from "./components/FilterBar";
 import "./App.css";
-import * as d3 from "d3";
-
-const data = [4, 8, 15, 16, 23, 42];
-console.log("Max:", d3.max(data));
 
 function App() {
-  const [count, setCount] = useState(0);
+  // State management
+  const [activeType, setActiveType] = useState(null);
+  const [showOnlyFavourites, setShowOnlyFavourites] = useState(false);
+  const [sortBy, setSortBy] = useState("name");
+  const [favourites, setFavourites] = useState(new Set());
+
+  // Get unique types from pokemons
+  const types = [...new Set(pokemons.map((p) => p.type))].sort();
+
+  // Filter and sort logic
+  const filteredPokemons = useMemo(() => {
+    let result = pokemons;
+
+    // Filter by type
+    if (activeType) {
+      result = result.filter((p) => p.type === activeType);
+    }
+
+    // Filter by favourites
+    if (showOnlyFavourites) {
+      result = result.filter((p) => favourites.has(p.id));
+    }
+
+    // Sort
+    result = [...result].sort((a, b) => {
+      if (sortBy === "name") {
+        return a.name.localeCompare(b.name);
+      } else if (sortBy === "hp") {
+        return b.hp - a.hp;
+      } else if (sortBy === "attack") {
+        return b.attack - a.attack;
+      }
+      return 0;
+    });
+
+    return result;
+  }, [activeType, showOnlyFavourites, sortBy, favourites]);
+
+  // Toggle favourite
+  const handleToggleFavourite = (pokemonId) => {
+    const newFavourites = new Set(favourites);
+    if (newFavourites.has(pokemonId)) {
+      newFavourites.delete(pokemonId);
+    } else {
+      newFavourites.add(pokemonId);
+    }
+    setFavourites(newFavourites);
+  };
 
   return (
-    <>
-      <div>
-        <h2> Testing set up and deployment</h2>
+    <div className="app-container">
+      <header className="app-header">
+        <h1>Pokémon Explorer</h1>
+        <p className="subtitle">Click cards to flip, heart to favourite, filters above</p>
+      </header>
 
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <FilterBar
+        types={types}
+        activeType={activeType}
+        onTypeChange={setActiveType}
+        showOnlyFavourites={showOnlyFavourites}
+        onToggleFavouritesFilter={setShowOnlyFavourites}
+        sortBy={sortBy}
+        onSortChange={setSortBy}
+      />
+
+      <div className="pokemon-grid">
+        {filteredPokemons.length > 0 ? (
+          filteredPokemons.map((pokemon) => (
+            <PokemonCard
+              key={pokemon.id}
+              pokemon={pokemon}
+              isFavourite={favourites.has(pokemon.id)}
+              onToggleFavourite={handleToggleFavourite}
+            />
+          ))
+        ) : (
+          <div className="no-results">No Pokémon found</div>
+        )}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   );
 }
 
