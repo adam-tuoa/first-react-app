@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import "./App.css";
 
 function App() {
+  const isEmbedded = window.self !== window.top;
   // State management
   const [activeType, setActiveType] = useState(null);
   const [showOnlyFavourites, setShowOnlyFavourites] = useState(false);
@@ -88,25 +89,26 @@ function App() {
           <div className="no-results">No Pokémon found</div>
         )}
       </div>
-
-      <Footer
-        attribution={{
-          text: "Yan Holtz's D3-loves-react course",
-          href: "http://d3-loves-react.com",
-        }}
-        links={[
-          {
-            href: "https://adam-tuoa.github.io/homepage/",
-            label: "Homepage",
-            icon: "home",
-          },
-          {
-            href: "https://github.com/adam-tuoa",
-            label: "GitHub",
-            icon: "github",
-          },
-        ]}
-      />
+      {!isEmbedded && (
+        <Footer
+          attribution={{
+            text: "Yan Holtz's D3-loves-react course",
+            href: "http://d3-loves-react.com",
+          }}
+          links={[
+            {
+              href: "https://adam-tuoa.github.io/homepage/",
+              label: "Homepage",
+              icon: "home",
+            },
+            {
+              href: "https://github.com/adam-tuoa",
+              label: "GitHub",
+              icon: "github",
+            },
+          ]}
+        />
+      )}
     </div>
   );
 }

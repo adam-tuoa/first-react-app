@@ -110,10 +110,10 @@
 /* Front side */
 .flip-card-front {
   background: white;
-  border: 1px solid #e0e0e0;
+  border: px solid #e0e0e0;
   border-left: 4px solid var(--type-color);
   border-top: 4px solid var(--type-color);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .pokemon-sprite {
